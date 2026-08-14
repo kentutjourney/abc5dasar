@@ -10,8 +10,15 @@ app.use(express.json());
 require('./handlers/game')(bot);
 
 // Endpoint webhook untuk Vercel
-app.post(`/api/telegram`, (req, res) => {
-    bot.handleUpdate(req.body, res);
+// Endpoint webhook untuk Vercel
+app.post(`/api/telegram`, async (req, res) => {
+    try {
+        await bot.handleUpdate(req.body);
+        res.status(200).json({ status: 'success' });
+    } catch (err) {
+        console.error('Error handling update:', err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.get('/', (req, res) => {
