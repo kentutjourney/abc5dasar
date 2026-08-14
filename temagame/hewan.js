@@ -1,5 +1,6 @@
-module.exports = [
-  // A
+  //
+  module.exports = [
+   
   "albatros", "alpaka", "amuba", "amblypygi", "anakonda", "anjing", "anjing laut", "angsa", 
   "anoa", "antelop", "arowana", "armadillo", "ayam", "ayam hutan", "ayam kalkun",
 
