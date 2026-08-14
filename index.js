@@ -6,17 +6,18 @@ const app = express();
 
 app.use(express.json());
 
-// --- PERINTAH DASAR (Agar bot tidak bisu) ---
+// --- PERINTAH DASAR ---
 bot.command('start', (ctx) => {
-    ctx.reply('Halo! Bot ABC 5 Dasar siap digunakan.\nKetik /mainabcacak untuk memulai permainan acak atau /help untuk bantuan.');
+    ctx.reply('Halo! Bot ABC 5 Dasar siap digunakan.\nKetik /mainabcacak untuk memulai permainan.');
 });
 
 bot.command('help', (ctx) => {
-    ctx.reply('Daftar perintah:\n/mainabcacak - Mulai game acak di grup\n/mainabccustom <Tema> - Mulai game dengan tema sendiri\n/stopaksakumas - Hentikan game (Khusus Admin)');
+    ctx.reply('Daftar perintah utama:\n/mainabcacak\n/mainabccustom\n/setting (Khusus Owner)\n/settinggrup (Khusus Manajer)\n/stopaksakumas');
 });
 
-// Panggil handler game yang sudah kita buat
+// Panggil handler game dan security yang sudah dibuat
 require('./handlers/game')(bot);
+require('./handlers/security')(bot);
 
 // Endpoint webhook untuk Vercel
 app.post(`/api/telegram`, async (req, res) => {
