@@ -1,23 +1,29 @@
-require('dotenv').config();
 const { Telegraf } = require('telegraf');
+const express = require('express');
 
-// Panggil kredensial token
-const botToken = process.env.BOT_TOKEN;
-const bot = new Telegraf(botToken);
+const bot = new Telegraf(process.env.BOT_TOKEN);
+const app = express();
 
-// Panggil module handlers
-const setupSecurity = require('./handlers/security');
-const setupGame = require('./handlers/game');
+app.use(express.json());
 
-// Inisialisasi fitur ke dalam bot
-setupSecurity(bot);
-setupGame(bot);
+// Panggil handler game yang sudah kita buat
+require('./handlers/game')(bot);
 
-// Nyalakan bot
-bot.launch().then(() => {
-    console.log('✅ Bot ABC 5 Dasar menyala dengan struktur modular yang rapi!');
+// Endpoint webhook untuk Vercel
+app.post(`/api/telegram`, (req, res) => {
+    bot.handleUpdate(req.body, res);
 });
 
-// Fitur keamanan untuk mematikan bot
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+app.get('/', (req, res) => {
+    res.send('Bot ABC 5 Dasar is running!');
+});
+
+// Penting untuk Vercel: Export module express
+module.exports = app;
+
+// Jika dijalankan secara lokal (bukan di Vercel)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(3000, () => {
+        console.log('Bot berjalan secara lokal di port 3000');
+    });
+}
